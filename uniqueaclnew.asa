@@ -1,0 +1,64 @@
+access-list acl permit icmp any any log 2
+access-list acl permit icmp any any
+access-list acl permit icmp any host 56.72.37.40 log 2
+access-list acl permit icmp any host 56.72.37.40 
+access-list acl permit icmp host 1.1.1.1 host 56.72.37.40 log 2
+access-list acl permit icmp host 1.1.1.1 host 56.72.37.40 
+access-list acl permit icmp host 1.1.1.1 host 56.72.37.40
+access-list new_mpe permit icmp any any 
+access-list new_mpe permit icmp host 56.72.37.20 56.185.194.0 255.255.255.0 echo 
+access-list new_mpe permit icmp host 56.72.37.20 56.185.75.0 255.255.255.0 echo 
+access-list new_mpe permit icmp host 56.72.37.20 56.89.209.0 255.255.255.0 echo log 2
+access-list new_mpe permit icmp host 56.72.37.20 any echo-reply 
+access-list new_mpe permit icmp host 56.72.37.20 host 56.72.6.179 echo 
+access-list new_mpe permit icmp host 56.72.37.20 host 56.72.6.180 echo 
+access-list new_mpe permit icmp host 56.72.37.20 host 56.72.6.252 echo 
+access-list new_mpe permit icmp host 56.72.37.20 host 56.72.6.69 echo 
+access-list new_mpe permit icmp host 56.72.37.20 56.72.37.0 255.255.255.0 echo 
+access-list new_mpe permit icmp host 56.72.37.24 host 56.206.32.199 echo-reply 
+access-list new_mpe permit icmp host 56.72.37.24 host 56.206.32.199 echo 
+access-list new_mpimgmt permit icmp 56.89.209.0 255.255.255.0 any 
+access-list new_mpimgmt permit icmp any any 
+access-list new_mpimgmt permit icmp 56.72.37.0 255.255.255.0 any 
+access-list new_outside permit icmp any 56.185.194.0 255.255.255.0 
+access-list new_outside permit icmp any 56.185.75.0 255.255.255.0 
+access-list new_outside permit icmp any 56.89.209.0 255.255.255.0 
+access-list new_outside permit icmp any 56.72.37.0 255.255.255.0 
+access-list new_outside permit icmp any 56.72.37.0 255.255.255.0 
+access-list new_outside permit icmp host 56.206.32.199 host 56.72.37.24 echo-reply 
+access-list new_outside permit icmp host 56.206.32.199 host 56.72.37.24 echo 
+access-list acl permit udp any gt www host 1.1.1.1 lt 999
+access-list acl permit udp any gt www host 1.1.1.1 lt 999
+access-list acl permit udp any eq netbios-ns host 56.72.37.60 eq netbios-ns
+access-list acl permit udp any eq netbios-dgm host 56.72.37.24 eq netbios-dgm
+access-list acl permit tcp any range 1010 1023 host 56.72.37.32 eq lpd
+access-list acl deny udp any eq ntp host 207.46.130.100 eq ntp
+access-list acl deny tcp host 56.72.37.71 range 1525 1526 any gt 1023 log 2
+access-list acl deny tcp host 56.72.37.71 range 1525 1526 any gt 1023 
+access-list acl deny tcp any gt 1023 host 56.72.37.71 range 1525 1526 log 2
+access-list acl deny tcp any gt 1023 host 56.72.37.71 range 1525 1526
+access-list acl deny tcp any lt 1023 host 56.72.37.71 range 1525 1526
+access-list acl deny tcp any eq www host 56.72.37.71 range 1525 1526
+access-list acl deny tcp any eq 780 host 56.72.37.71 range 1525 1526
+access-list acl deny tcp host 56.72.37.71 range 1525 1526 any eq www
+access-list acl deny tcp host 56.72.37.71 range 1525 1526 any eq 780
+access-list acl deny tcp host 56.72.37.71 range 1525 1526 1.1.1.0 255.255.255.0  eq smtp
+access-list acl deny tcp host 56.72.37.71 range 1525 1526 1.1.1.0 255.255.255.0  lt 87
+access-list acl deny tcp host 56.72.37.71 range 1525 1526 1.1.1.0 255.255.255.0  deq 87
+access-list acl deny tcp host 56.72.37.71 range 1525 1526 1.1.1.0 255.255.255.0  lt www
+access-list acl deny tcp host 56.72.37.71 range 1525 1526 1.1.1.0 255.255.255.0  gt smtp log 2
+access-list acl deny tcp host 56.72.37.71 range 1525 1526 1.1.1.0 255.255.255.0  range smtp www
+access-list acl deny tcp host 56.72.37.71 range 1525 1526 1.1.1.0 255.255.255.0  range 86 95 log 2
+access-list acl deny tcp host 56.72.37.71 range 1525 1526 1.1.1.0 255.255.255.0  range 81 imap log 2
+access-list acl deny tcp host 56.72.37.71 range 1525 1526 1.1.1.0 255.255.255.0  range dns 100 log 2
+access-list acl deny tcp host 56.72.37.71 range imap 9090 1.1.1.0 255.255.255.0  range smtp www
+access-list acl deny tcp host 56.72.37.71 range 2 imap 1.1.1.0 255.255.255.0  range 86 95 log 2
+access-list acl deny tcp host 56.72.37.71 range smtp imap 1.1.1.0 255.255.255.0  range 81 imap log 2
+access-list acl_outside permit tcp any gt 1023 56.70.33.106 255.255.255.254 eq 8000 
+access-list acl_outside permit tcp 56.70.33.106 255.255.255.254 eq 8001 any gt 1023
+access-list acl_outside permit tcp 56.70.33.107 255.255.255.254 eq 8002 any gt 1028
+access-list acl_outside permit tcp 56.70.33.108 255.255.255.254 eq 8003 any lt 1027
+access-list acl_outside permit tcp 56.70.33.109 255.255.255.254 eq 8004 any eq 1023
+access-list acl_outside permit tcp 56.70.33.110 255.255.255.254 eq 8005 any eq smtp
+access-list acl_outside permit tcp 56.70.33.111 255.255.255.254 eq 8006 any gt bgp log 2
+access-list acl_outside permit tcp 56.70.33.112 255.255.255.254 eq 8007 any lt imap log 2

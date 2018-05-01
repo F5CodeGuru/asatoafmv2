@@ -1,0 +1,26 @@
+#Cisco ASA/PIX sample config with all unique permutations of acls
+
+
+#Non port based rules
+
+
+##IPv6 Acls
+ipv6 access-list icmpacl permit icmp6 any any
+ipv6 access-list icmpacl permit icmp6 any any log 2
+ipv6 access-list icmpacl permit icmp6 any host 3001:1::203:A0FF:FED6:162D
+ipv6 access-list icmpacl permit icmp6 any host 3001:1:2:AA:203:A0FF:FED6:162D
+
+ipv6 access-list outsideACL permit icmp6 host fe80::21e:7bff:fe10:10c any router-advertisement
+ipv6 access-list acl_grp permit tcp any host 3001:1:2:AA:203:A0FF:FED6:162D
+ipv6 access-list acl_grp permit tcp any host 3001:1::203:A0FF:FED6:162D
+ipv6 access-list acl_out deny tcp any host 3001:1::203:A0FF:FED6:162D eq ftp 
+ipv6 access-list acl_dmz1 permit tcp any host 3001:1::203:A0FF:FED6:162D lt 1025
+
+#Asa supports mixed acl, afm does not support this.
+#access-list demoacl extended permit ip 2001:DB8:1::/64 10.2.2.0 255.255.255.0
+#access-list demoacl extended permit ip 2001:DB8:1::/64 2001:DB8:2::/64
+
+
+ 
+
+

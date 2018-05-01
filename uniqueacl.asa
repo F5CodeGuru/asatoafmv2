@@ -1,0 +1,202 @@
+#Cisco ASA/PIX sample config with all unique permutations of acls
+
+name 1.1.1.1 name1
+name 1.1.1.2 name2 description name2
+
+#Service object groups
+object-group service servicegrouptcp1 tcp
+ description from cisco object-group service servicegrouptcp1 tcp
+ port-object eq 1810
+ port-object eq pop3
+ port-object eq pop2
+ port-object eq smtp
+ port-object eq 88
+ port-object eq imap4
+ port-object range 67 90
+ 
+object-group service servicegrouptcp2 tcp
+ port-object eq www
+ port-object eq ldap
+ port-object eq 77
+ 
+object-group service servicegroupudp1 udp
+ description from object-group service servicegroupudp1 udp
+ port-object eq 1812
+ port-object range 45 99
+ 
+object-group service servicegroupudp2 udp
+ port-object eq dns
+ port-onject eq 33
+ 
+object-group service servicegroupnestedtcp1 tcp
+ group-object servicegrouptcp1
+ port-object eq 87
+ port-object eq dns
+ 
+object-group protocol protocolgroup1
+ protocol-object udp
+ protocol-object tcp
+ 
+#Not supported, tcp-udp groups or nested service group objects
+#object-group service Kerberos88 tcp-udp
+# port-object eq 88
+#object-group service DM_INLINE_TCPUDP_3 tcp-udp
+# group-object Kerberos88
+# port-object eq domain 
+#object-group service DM_INLINE_SERVICE_16
+# service-object esp 
+# service-object ah 
+# service-object tcp eq 4433 
+# service-object tcp eq https 
+# service-object udp eq 4500 
+# service-object udp eq 7301 
+# service-object udp eq isakmp 
+
+
+ 
+#Network object groups
+object-group network networkgroup1
+ description cisco object-group network networkgroup1
+ network-object host 78.129.131.15
+ network-object host 81.19.84.54
+ network-object host 178.92.57.227
+ network-object host 203.198.7.66
+ network-object host 218.102.23.228
+ network-object host 178.67.30.153
+ network-object host 218.30.22.82
+ network-object host 141.85.32.132
+ network-object host 117.22.229.187
+ network-object host 66.196.85.51
+ network-object host 122.225.100.154
+ network-object host 218.78.209.165
+ network-object host 193.109.247.52
+ network-object host 217.199.217.200
+ network-object host 193.109.247.162
+ network-object 61.147.0.0 255.255.0.0
+ network-object 61.160.0.0 255.255.0.0
+ network-object host 93.170.52.20
+ network-object host 67.222.132.198
+ network-object host 87.229.111.182
+ 
+object-group network networkgroup2
+ network-object host 5.5.5.5
+ network-object 61.6.0.0 255.255.0.0
+ 
+object-group network networknestedgroup1
+ network-object host 5.5.5.6
+ group-object networkgroup1
+ network-object name1 255.255.255.255
+ 
+#Object network 
+object network objectnetwork1
+ host 172.26.6.1
+object network objectnetwork2
+ host 172.26.6.2
+object network objectnetwork3
+ host 172.26.6.2
+
+#Only one allowed, valid types are range of addresses, nat, fqdn, host
+object network objectnestednetwork1
+ network-object host 1.1.1.6
+ 
+object network objectnetworkrange
+ range 1.1.1.2 1.1.1.3
+ description range
+ 
+#Not supported
+#AFM as of 11.6 does not support fqdn
+#object network obj-hr88.cisco.com
+ #  fqdn hr88.cisco.com
+ 
+##IPv6 objects
+object network IPv6_outside_mapped
+ subnet 201b::/96
+
+
+#ICMP Rules
+access-list icmpacl permit icmp any any
+access-list icmpacl permit icmp any any log 2
+access-list icmpacl permit icmp any host 56.72.37.40 
+access-list icmpacl permit icmp any host 56.72.37.40 log 2
+access-list icmpacl permit icmp host 1.1.1.1 host 56.72.37.40 
+access-list icmpacl permit icmp host 1.1.1.1 host 56.72.37.40 log 2
+access-list icmpacl permit icmp host 56.72.37.20 56.185.194.0 255.255.255.0 echo 
+access-list icmpacl permit icmp host 56.72.37.20 any echo-reply 
+access-list icmpacl permit icmp any echo-reply host 56.72.37.20 log 2
+access-list icmpacl permit icmp any echo-reply 1.0.0.0 255.255.255.0 echo-request log 2
+access-list icmpacl permit icmp host 56.206.32.199 host 56.72.37.24 echo-reply 
+
+
+#TCP/UDP/SCTP rules
+access-list udpacl permit udp any gt www host 1.1.1.1 lt 999
+access-list udpacl permit udp any gt www host 1.1.1.1 lt 999 log 2
+access-list udpacl permit udp any eq netbios-ns host 56.72.37.60 eq netbios-ns
+access-list udpacl permit udp any eq netbios-dgm host 56.72.37.24 eq netbios-dgm
+access-list udpacl permit tcp any range 1010 1023 host 56.72.37.32 eq lpd
+access-list udpacl deny udp any eq ntp host 207.46.130.100 eq ntp
+access-list udpacl deny udp host 56.72.37.71 range 1525 1526 any gt 1023 
+access-list udpacl deny udp host 56.72.37.71 range 1525 1526 any gt 1023 log 2
+access-list udpacl deny udp any gt 1023 host 56.72.37.71 range 1525 1526
+access-list udpacl deny tcp any gt 1023 host 56.72.37.71 range 1525 1526 log 2
+access-list udpacl deny udp any lt 1023 host 56.72.37.71 range 1525 1526
+access-list udpacl deny udp any eq www host 56.72.37.71 range 1525 1526
+access-list udpacl deny udp any eq 780 host 56.72.37.71 range 1525 1526
+access-list udpacl deny udp host 56.72.37.71 range 1525 1526 any eq www
+access-list udpacl deny udp host 56.72.37.71 range 1525 1526 any eq 780
+access-list udpacl deny tcp host 56.72.37.71 range 1525 1526 1.1.1.0 255.255.255.0  eq smtp
+access-list udpacl deny udp host 56.72.37.71 range 1525 1526 1.1.1.0 255.255.255.0  lt 87
+access-list udpacl deny udp host 56.72.37.71 range 1525 1526 1.1.1.0 255.255.255.0  deq 87
+access-list udpacl deny udp host 56.72.37.71 range 1525 1526 1.1.1.0 255.255.255.0  lt www
+access-list udpacl deny tcp host 56.72.37.71 range 1525 1526 1.1.1.0 255.255.255.0  gt smtp log 2
+access-list udpacl deny udp host 56.72.37.71 range 1525 1526 1.1.1.0 255.255.255.0  range smtp www
+access-list udpacl deny udp host 56.72.37.71 range 1525 1526 1.1.1.0 255.255.255.0  range 86 95 log 2
+access-list udpacl deny udp host 56.72.37.71 range 1525 1526 1.1.1.0 255.255.255.0  range 81 imap log 2
+access-list udpacl deny udp host 56.72.37.71 range 1525 1526 1.1.1.0 255.255.255.0  range dns 100 log 2
+access-list udpacl deny udp host 56.72.37.71 range imap 9090 1.1.1.0 255.255.255.0  range smtp www
+access-list udpacl deny udp host 56.72.37.71 range 2 imap 1.1.1.0 255.255.255.0  range 86 95 log 2
+access-list udpacl deny udp host 56.72.37.71 range smtp imap 1.1.1.0 255.255.255.0  range 81 imap log 2
+access-list dmz-access-out extended permit tcp object-group objectnestednetwork1 object-group objectnetwork3 eq smtp 
+
+access-list dmz-access-out extended permit tcp object-group networkgroup1 any eq smtp 
+access-list dmz-access-out extended permit tcp object-group networkgroup1 gt 1023 networkgroup2 eq smtp 
+access-list dmz-access-out extended permit tcp object-group networkgroup1 gt 1023 networkgroup2 eq smtp inactive
+
+access-list dmz-access-out extended permit udp object-group networkgroup1 range smtp 89 object-group networknestedgroup1 range 67 www log 2
+access-list dmz-access-out extended permit udp object-group networkgroup1 range smtp 89 object-group networknestedgroup1 eq www
+access-list dmz-access-out extended permit udp object-group networkgroup1 object-group networknestedgroup1 range 67 www log 2
+access-list dmz-access-out extended permit udp object-group networkgroup1 object-group networknestedgroup1 range 67 www log 2 inactive
+access-list dmz-access-out extended permit udp object-group networkgroup1 object-group networknestedgroup1 range 67 www log 2
+access-list dmz-access-out extended permit object-group protocolgroup1 object-group networkgroup1 object-group servicegrouptcp2 object-group networknestedgroup1 object-group servicegrouptcp1 inactive
+access-list dmz-access-out extended permit object-group protocolgroup1 networkgroup1 host 69.16.78.40 eq domain
+access-list dmz-access-out extended permit object-group protocolgroup1 object-group networkgroup1 lt 6550 object-group networknestedgroup1 object-group servicegrouptcp1 log 1
+access-list dmz-access-out extended permit object-group protocolgroup1 any host 69.16.78.40 eq domain inactive 
+
+#Non port based rules
+
+
+##IPv6 Acls
+ipv6 access-list icmpacl permit icmp6 any any
+ipv6 access-list icmpacl permit icmp6 any any log 2
+ipv6 access-list icmpacl permit icmp6 any host 56.72.37.40 
+access-list icmpacl permit icmp any host 56.72.37.40 log 2
+access-list icmpacl permit icmp host 1.1.1.1 host 56.72.37.40 
+access-list icmpacl permit icmp host 1.1.1.1 host 56.72.37.40 log 2
+access-list icmpacl permit icmp host 56.72.37.20 56.185.194.0 255.255.255.0 echo 
+access-list icmpacl permit icmp host 56.72.37.20 any echo-reply 
+access-list icmpacl permit icmp any echo-reply host 56.72.37.20 log 2
+access-list icmpacl permit icmp any echo-reply 1.0.0.0 255.255.255.0 echo-request log 2
+access-list icmpacl permit icmp host 56.206.32.199 host 56.72.37.24 echo-reply
+ipv6 access-list acl_grp permit tcp any host 3001:1::203:A0FF:FED6:162D
+ipv6 access-list outsideACL permit icmp6 host fe80::21e:7bff:fe10:10c any router-advertisement
+ipv6 access-list acl_grp permit tcp any host 3001:1::203:A0FF:FED6:162D
+ipv6 access-list acl_out deny tcp any host 3001:1::203:A0FF:FED6:162D eq ftp 
+ipv6 access-list acl_dmz1 permit tcp any host 3001:1::203:A0FF:FED6:162D lt 1025
+
+#Asa supports mixed acl, afm does not support this.
+#access-list demoacl extended permit ip 2001:DB8:1::/64 10.2.2.0 255.255.255.0
+#access-list demoacl extended permit ip 2001:DB8:1::/64 2001:DB8:2::/64
+
+
+ 
+
+

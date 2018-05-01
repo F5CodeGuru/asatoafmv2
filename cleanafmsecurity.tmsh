@@ -1,0 +1,8 @@
+
+
+
+tmsh delete /security firewall rule-list all
+tmsh delete /security firewall address-list all
+tmsh delete /security firewall port-list all
+tmsh delete /security firewall schedule all
+
